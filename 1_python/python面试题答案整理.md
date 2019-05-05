@@ -91,11 +91,204 @@ d = {key:value for (key:value} in iterable}
 ```
 print("aStr"[::-1])  #反向切片
 ```
+9、将字符串 "k:1 |k1:2|k2:3|k3:4"，处理成字典 {k:1,k1:2,...}，字符串转字典
+```
+str1 = "k:1 |k1:2|k2:3|k3:4"
+def strtodict(str1):
+    dict1 = {}
+    for items in str1.split('|'):
+    key,value = iterms.split(':')
+        dict1[key] = value
+    return dict1
+```
+10、按字典元素的值排序：请按alist中元素的age由大到小排序
+```
+alist = [{'name':'a','age':20},{'name':'b','age':30},{'name':'c','age':25}]
+def sort_by_age(list1):
+    return sorted(alist,key=lambda x:x['age'],reverse=True)
+```
+11、越界与越界切片：下面代码的输出结果将是什么？
+```
+list = ['a','b','c','d','e']
+print(list[10:])
+
+代码将输出[],不会产生IndexError错误，就像所期望的那样，尝试用超出成员的个数的index来获取某个列表的成员。例如，尝试获取list[10]和之后的成员，会导致IndexError。然而，尝试获取列表的切片，开始的index超过了成员个数不会产生IndexError，而是仅仅返回一个空列表。这成为特别让人恶心的疑难杂症，因为运行的时候没有错误产生，导致Bug很难被追踪到。
+```
+12、列表生成式，产生一个公差为11的等差数列
+```
+print([x*11 for x in range(10)])
+```
+13、集合去重的使用：给定两个列表，怎么找出他们相同的元素和不同的元素？
+```
+list1 = [1,2,3]
+list2 = [3,4,5]
+set1 = set(list1)
+set2 = set(list2)
+print(set1 & set2)
+print(set1 ^ set2)
+```
+14、Python去重的方法：请写出一段python代码实现删除list里面的重复元素？
+```
+集合去重：
+l1 = ['b','c','d','c','a','a']
+l2 = list(set(l1))
+print(l2)
+
+用list类的sort方法:
+l1 = ['b','c','d','c','a','a']
+l2 = list(set(l1))
+l2.sort(key=l1.index)
+print(l2)
+也可以这样写:
+l1 = ['b','c','d','c','a','a']
+l2 = sorted(set(l1),key=l1.index)
+print(l2)
+
+也可以用遍历：
+l1 = ['b','c','d','c','a','a']
+l2 = []
+for i in l1:
+    if not i in l2:
+        l2.append(i)
+print(l2)
+```
+## 企业面试题
+15、python新式类和经典类的区别？
+```
+a. 在python里凡是继承了object的类，都是新式类
+b. Python3里只有新式类 
+c. Python2里面继承object的是新式类，没有写父类的是经典类 
+d. 经典类目前在Python里基本没有应用
+```
+16、python内置的数据类型？
+```
+a. 整型 int、 长整型 long、浮点型 float、 复数 complex 
+b. 字符串 str、 列表list、 元祖tuple 
+c. 字典 dict 、 集合 set
+d. 布尔型 Boolean
+```
+17、python单例设计模式
+```
+第一种方法:使用装饰器
+def singleton(cls):
+    instances = {}
+    def wrapper(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return wrapper
+@singleton
+class Foo(object):
+    pass
+foo1 = Foo()
+foo2 = Foo()
+print foo1 is foo2 #True
+
+第二种方法：使用基类 New 是真正创建实例对象的方法，所以重写基类的new 方法，以此保证创建对象的时候只生成一个实例
+class Singleton(object):
+    def __new__(cls,*args,**kwargs):
+        if not hasattr(cls,'_instance'):
+            cls._instance = super(Singleton,cls).__new__(cls,*args,**kwargs)
+        return cls._instance
+    
+class Foo(Singleton):
+    pass
+
+foo1 = Foo()
+foo2 = Foo()
+
+print foo1 is foo2 #True
+
+第三种方法：元类，元类是用于创建类对象的类，类对象创建实例对象时一定要调用call方法，因此在调用call时候保证始终只创建一个实例即可，type是python的元类
+class Singleton(type):
+    def __call__(cls,*args,**kwargs):
+        if not hasattr(cls,'_instance'):
+            cls._instance = super(Singleton,cls).__call__(*args,**kwargs)
+        return cls._instance
+class Foo(object):
+    __metaclass__ = Singleton
+
+foo1 = Foo()
+foo2 = Foo()
+print foo1 is foo2 #True
+```
+18、反转整数：反转一个整数，例如-123 --> -321
+```
+class Solution(object):
+    def reverse(self,x):
+        if -10<x<10:
+            return x
+        str_x = str(x)
+        if str_x[0] !="-":
+            str_x = str_x[::-1]
+            x = int(str_x)
+        else:
+            str_x = str_x[1:][::-1]
+            x = int(str_x)
+            x = -x
+        return x if -2147483648<x<2147483647 else 0
+if __name__ == '__main__':
+    s = Solution()
+    reverse_int = s.reverse(-120)
+    print(reverse_int)
+```
+19、设计实现遍历目录与子目录，抓取.pyc文件
+```
+第一种方法：
+import os
+
+def get_files(dir,suffix):
+    res = []
+    for root,dirs,files in os.walk(dir):
+        for filename in files:
+            name,suf = os.path.splitext(filename)
+            if suf == suffix:
+                res.append(os.path.join(root,filename))
+
+    print(res)
+
+get_files("./",'.pyc')
+
+第二种方法：
+import os
+
+def pick(obj):
+    try:
+        if obj.[-4:] == ".pyc":
+            print(obj)
+        except:
+            return None
+    
+def scan_path(ph):
+    file_list = os.listdir(ph)
+    for obj in file_list:
+        if os.path.isfile(obj):
+    pick(obj)
+        elif os.path.isdir(obj):
+            scan_path(obj)
+    
+if __name__=='__main__':
+    path = input('输入目录')
+    scan_path(path)
+
+第三种方法
+from glob import iglob
 
 
+def func(fp, postfix):
+    for i in iglob(f"{fp}/**/*{postfix}", recursive=True):
+        print(i)
 
+if __name__ == "__main__":
+    postfix = ".pyc"
+    func("K:\Python_script", postfix)
 
-
+> 深度遍历、广度遍历、递归遍历等
+```
+20、一行代码实现1-100求和
+```
+print(sum(range(1,101)))
+```
 
 
 
