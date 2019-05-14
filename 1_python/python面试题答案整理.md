@@ -289,9 +289,77 @@ if __name__ == "__main__":
 ```
 print(sum(range(1,101)))
 ```
+21、Python-遍历列表时删除元素的正确做法
+```
+- 反向遍历
+num_list = [1, 2, 3, 4, 5]
+print(num_list)
 
+for i in range(len(num_list)-1, -1, -1):
+    if num_list[i] == 2:
+        num_list.pop(i)
+    else:
+        print(num_list[i])
 
+print(num_list)
+- 遍历拷贝的list，操作原始的list
+num_list = [1, 2, 3, 4, 5]
+print(num_list)
 
+for item in num_list[:]:
+    if item == 2:
+        num_list.remove(item)
+    else:
+        print(item)
+
+print(num_list)
+- while循环
+num_list = [1, 2, 3, 4, 5]
+print(num_list)
+
+i = 0
+while i < len(num_list):
+    if num_list[i] == 2:
+        num_list.pop(i)
+        i -= 1
+    else:
+        print(num_list[i])
+
+    i += 1
+print(num_list)
+
+```
+22、Python的可变类型和不可变类型
+```
+python的每个对象都分为可变和不可变，主要的核心类型中，数字、字符串、元组是不可变的，列表、字典是可变的。
+对不可变类型的变量重新赋值，实际上是重新创建一个不可变类型的对象，并将原来的变量重新指向新创建的对象（如果没有其他变量引用原有对象的话（即引用计数为0），原有对象就会被回收）。
+```
+23、python中is和==的区别
+```
+Python中对象包含的三个基本要素，分别是：id(身份标识)、type(数据类型)和value(值)。
+is和==都是对对象进行比较判断作用的，但对对象比较判断的内容并不相同：
+- is是同一性运算符，这个运算符比较判断的是对象间的唯一身份标识，也就是id是否相同
+- ==是比较操作符，用来比较判断两个对象的value(值)是否相等
+> 只有数值型和字符串型，并且在通用对象池中的情况下，a is b才为True，否则当a和b是int，str，tuple，list，dict或set型时，a is b均为False。
+```
+24、求出列表所有奇数并构造新列表
+```
+a = [1,2,3,4,5,6,7,8,9]
+- filter方法
+def fn(a):
+    return a%2==1
+nowlist = filter(fn,a)
+nowlist = [i for i in newlist]
+print(newlist)
+- 列表推导式
+res = [i for i in a if i%2==1]
+- 简单判断与append新列表
+konglist=[]
+for i in a:
+    if i%2==1:
+        konglist.append(i)
+print(konglist)
+```
 
 
 
